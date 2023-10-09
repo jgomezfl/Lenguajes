@@ -1,0 +1,10 @@
+For{(    While( 
+Int     }     Dias              Boolean       uwu
+If #oiwejdowáiedjowiedj 12312@3
+
+Dias
+#12+45
+
+For (Int i = 0 ; i < 12 ; i ++){
+    Print   (4.5)
+}
