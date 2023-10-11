@@ -6,7 +6,7 @@ public class UnidadDeControl {
     private String CP; //registro que apunta a una dirección en la memoria
 
     ////////////////////////////////////// Tabla de Instrucciones ////////////////////////////////////
-    private Map<String, String> TablaInstrucciones = new HashMap<>();
+    private final Map<String, String> TablaInstrucciones = new HashMap<>();
 
     //////////////////////////////////////////// Registros ///////////////////////////////////////////
     Map<String, String> registros = new HashMap<>();
@@ -20,6 +20,8 @@ public class UnidadDeControl {
     */
 
     UnidadDeControl(Memoria memoria){
+        ua = new UnidadAritmetica("","");
+
         IC = "0000000000000000";
         CP = "0000000000";
 
@@ -323,5 +325,21 @@ public class UnidadDeControl {
         }
         // System.out.println(resp);
         CP = resp;
+    }
+
+    public String getIndC(){
+        return ua.getC();
+    }
+
+    public String getIndP(){
+        return ua.getP();
+    }
+
+    public String getIndN(){
+        return ua.getN();
+    }
+
+    public String getIndD(){
+        return ua.getD();
     }
 }

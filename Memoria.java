@@ -20,6 +20,10 @@ public class Memoria {
         }
     }
 
+    public String[] TraerMemoria(){
+        return memoria;
+    }
+
     public String LeerMemoria(String posicion){
         if(BinarioToDecimalPosicion(posicion) == 1024){
             return "Problemas con las posiciones de la memoria";

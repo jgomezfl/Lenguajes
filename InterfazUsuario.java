@@ -2,7 +2,8 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
 public class InterfazUsuario extends JFrame{
-    private static final Memoria MEMORIA = new Memoria();
+    private Memoria memoria;
+    private UnidadDeControl uc;
     private JPanel Computador;
     private JLabel valueD;
     private JLabel dValue;
@@ -24,21 +25,36 @@ public class InterfazUsuario extends JFrame{
     private JLabel p;
     private JTable Memoria;
 
-    public InterfazUsuario(){
+    public InterfazUsuario(Memoria memoria, UnidadDeControl uc){
+        this.memoria = memoria;
+        this.uc = uc;
 
+        mostrar();
+    }
+
+    public void mostrar(){
         setTitle("Computador");
         setSize(700, 800);
         setContentPane(Computador);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        String[] memoriaCompleta = MEMORIA.TraerMemoria();
+        String[] memoriaCompleta = memoria.TraerMemoria();
 
         MemoriaTableModel memoriaTableModel = new MemoriaTableModel(memoriaCompleta);
 
         Memoria.setModel(memoriaTableModel);
 
-        setVisible(true);
+        valueA.setText(uc.registros.get("00"));
+        valueB.setText(uc.registros.get("01"));
+        valueC.setText(uc.registros.get("10"));
+        valueD.setText(uc.registros.get("11"));
 
+//        cValue.setText(uc.getIndC());
+//        pValue.setText(uc.getIndP());
+//        nValue.setText(uc.getIndN());
+//        dValue.setText(uc.getIndD());
+
+        setVisible(true);
     }
 
     private static class MemoriaTableModel extends AbstractTableModel {
