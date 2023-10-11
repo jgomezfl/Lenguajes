@@ -10,10 +10,12 @@ public class Computador{
         ////////////////////////////////////////// Memoria //////////////////////////////////////////////
         // Memoria memoria = new Memoria();
 
-        Ensamblador ensamblador = new Ensamblador("Programa.txt");
-        ensamblador.compilar();
+        // memoria.EscribirMemoria("0000000000", "0101010000000010");
+        // memoria.EscribirMemoria("0000000001", "0000000100001010");
 
-        // Xd;
+        Ensamblador ensamblador = new Ensamblador("Programa.txt");
+        ensamblador.Ensamblar();
+        // System.out.println(ensamblador.DecimalToBinario(45));
 
         ////////////////////////////////// Escribimos un programa mcd ///////////////////////////////////
         // memoria.EscribirMemoria("0100000000", "0001001000000000"); //mcd

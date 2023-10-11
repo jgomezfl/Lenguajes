@@ -40,6 +40,7 @@ public class UnidadDeControl {
         TablaInstrucciones.put("SaltarSiPos",   "010010");
         TablaInstrucciones.put("SaltarSiDes",   "010011");
         TablaInstrucciones.put("Saltar",        "010100");
+        TablaInstrucciones.put("AlmacenarNum",  "010101"); //Almacena un número en la dirección de memoria especificada
 
         // Entre registros
         TablaInstrucciones.put("Copiar",        "011000000000");
@@ -49,10 +50,10 @@ public class UnidadDeControl {
         TablaInstrucciones.put("Div",           "011000000100");
 
         // El registro y un número
-        TablaInstrucciones.put("SumarNum",         "011000000101");
-        TablaInstrucciones.put("RestarNum",        "011000000110");
-        TablaInstrucciones.put("MultNum",          "011000000111"); // falta implementar
-        TablaInstrucciones.put("DivNum",           "011000001000"); // falta implementar
+        TablaInstrucciones.put("SumarNum",      "011000000101");
+        TablaInstrucciones.put("RestarNum",     "011000000110");
+        TablaInstrucciones.put("MultNum",       "011000000111");
+        TablaInstrucciones.put("DivNum",        "011000001000");
 
         this.memoria = memoria;
     }
@@ -125,6 +126,12 @@ public class UnidadDeControl {
         if((M.length() == 10) && (M.matches("[01]+"))){
             CP = M;
         }
+    }
+
+    void AlmacenarNum(String M){
+        Sumar1Direccion();
+        ExtraerMemoria();
+        memoria.EscribirMemoria(M, IC);
     }
 
     void Copiar(String R, String R1){
@@ -260,6 +267,10 @@ public class UnidadDeControl {
                 if(i.getKey().equals("Saltar")){
                     Saltar(IC.substring(6, 16));
                     return;
+                }
+                if(i.getKey().equals("AlmacenarNum")){
+                    AlmacenarNum(IC.substring(6, 16));
+                    break;
                 }
                 if(i.getKey().equals("Copiar")){
                     // System.out.println("Copia del registro "+IC.substring(12, 14)+" al registro "+IC.substring(14, 16));
