@@ -12,52 +12,45 @@ import java.util.Map;
 public class Ensamblador {
     // Memoria memoria = new Memoria();
     // UnidadDeControl uc;
-    FileReader fR;
     
     private Map<String, String> TablaInstrucciones = new HashMap<>();
     private Map<String, String> Etiquetas = new HashMap<>();
     private Map<String, String> Registros = new HashMap<>();
     String PrimeraEtiqueta;
 
-    Ensamblador(String ruta){
-        try{
-            fR = new FileReader(ruta);
-            
-            TablaInstrucciones.put("Parar",         "0000000000000000");
-            TablaInstrucciones.put("Cargar",        "0001");
-            TablaInstrucciones.put("CargarValor",   "0010");
-            TablaInstrucciones.put("Almacenar",     "0011");
-    
-            TablaInstrucciones.put("SaltarSiCero",  "010000");
-            TablaInstrucciones.put("SaltarSiNeg",   "010001");
-            TablaInstrucciones.put("SaltarSiPos",   "010010");
-            TablaInstrucciones.put("SaltarSiDes",   "010011");
-            TablaInstrucciones.put("Saltar",        "010100");
-            TablaInstrucciones.put("AlmacenarNum",  "010101"); //Almacena un número en la dirección de memoria especificada
-    
-            // Entre registros
-            TablaInstrucciones.put("Copiar",        "011000000000");
-            TablaInstrucciones.put("Sumar",         "011000000001");
-            TablaInstrucciones.put("Restar",        "011000000010");
-            TablaInstrucciones.put("Mult",          "011000000011");
-            TablaInstrucciones.put("Div",           "011000000100");
-    
-            // El registro y un número
-            TablaInstrucciones.put("SumarNum",      "011000000101");
-            TablaInstrucciones.put("RestarNum",     "011000000110");
-            TablaInstrucciones.put("MultNum",       "011000000111");
-            TablaInstrucciones.put("DivNum",        "011000001000");
+    Ensamblador(){
+        TablaInstrucciones.put("Parar",         "0000000000000000");
+        TablaInstrucciones.put("Cargar",        "0001");
+        TablaInstrucciones.put("CargarValor",   "0010");
+        TablaInstrucciones.put("Almacenar",     "0011");
 
-            Registros.put("A", "00");
-            Registros.put("B", "01");
-            Registros.put("C", "10");
-            Registros.put("D", "11");
-        }catch(IOException e){
-            System.err.println("Error al leer el fichero: " + e.getMessage());
-        }
+        TablaInstrucciones.put("SaltarSiCero",  "010000");
+        TablaInstrucciones.put("SaltarSiNeg",   "010001");
+        TablaInstrucciones.put("SaltarSiPos",   "010010");
+        TablaInstrucciones.put("SaltarSiDes",   "010011");
+        TablaInstrucciones.put("Saltar",        "010100");
+        TablaInstrucciones.put("AlmacenarNum",  "010101"); //Almacena un número en la dirección de memoria especificada
+
+        // Entre registros
+        TablaInstrucciones.put("Copiar",        "011000000000");
+        TablaInstrucciones.put("Sumar",         "011000000001");
+        TablaInstrucciones.put("Restar",        "011000000010");
+        TablaInstrucciones.put("Mult",          "011000000011");
+        TablaInstrucciones.put("Div",           "011000000100");
+
+        // El registro y un número
+        TablaInstrucciones.put("SumarNum",      "011000000101");
+        TablaInstrucciones.put("RestarNum",     "011000000110");
+        TablaInstrucciones.put("MultNum",       "011000000111");
+        TablaInstrucciones.put("DivNum",        "011000001000");
+
+        Registros.put("A", "00");
+        Registros.put("B", "01");
+        Registros.put("C", "10");
+        Registros.put("D", "11");
     }
 
-    public void Ensamblar(){
+    public void Ensamblar(String codigo){
         String nameFile = "resultado_a_redireccionar.txt";
         List<String> lineas = new ArrayList<>();
 
@@ -66,13 +59,13 @@ public class Ensamblador {
             BufferedWriter bfWriter = new BufferedWriter(fWriter);
             String respuesta = "";
 
-            BufferedReader bf = new BufferedReader(fR);
+            String [] cod = codigo.split("\n");
             String linea;
             int contLinea = 0;
 
-            while ((linea = bf.readLine()) != null){
-                lineas.add(linea);
-                linea = linea.replaceAll("\\s+", " ");
+            for(String i : cod){
+                lineas.add(i);
+                linea = i.replaceAll("\\s+", " ");
                 List <String> l = new ArrayList<String>(Arrays.asList(linea.split(" ")));
                 l.removeIf(item -> item.equals(""));
                 if(l.get(0).contains(":")){
@@ -95,11 +88,10 @@ public class Ensamblador {
                 }
                 contLinea ++;
             }
-            bf.close();
 
-            for(String i : Etiquetas.keySet()){
-                System.out.println(i+" "+Etiquetas.get(i));
-            }
+//            for(String i : Etiquetas.keySet()){
+//                System.out.println(i+" "+Etiquetas.get(i));
+//            }
 
             for (String i : lineas){
                 linea = i.replaceAll("\\s+", " ");
