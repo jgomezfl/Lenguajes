@@ -64,7 +64,7 @@ public class Computador{
         //////////////////////////////////////////// Unidad de Control //////////////////////////////////
         UnidadDeControl uc = new UnidadDeControl(memoria);
         
-        uc.Procesar("0000000000");
+//        uc.Procesar("0000000000");
 //        System.out.println(uc.registros.get("00"));
 //        System.out.println(uc.registros.get("01"));
 //        System.out.println(uc.registros.get("10"));
@@ -74,6 +74,6 @@ public class Computador{
 
         ///////////////////////////////////////// Interfaz /////////////////////////////////////////////
 
-        new InterfazUsuario(memoria, uc);
+        new InterfazUsuario(memoria, uc, ensamblador);
     }
 }
