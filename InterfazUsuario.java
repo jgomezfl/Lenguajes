@@ -7,7 +7,12 @@ public class InterfazUsuario extends JFrame{
     private final Memoria memoria;
     private final UnidadDeControl uc;
     private final Ensamblador ensamblador;
-    private Integer espacioMemoria = 0;
+    private Integer espacioMemoria;
+
+    public void setEspacioMemoria(Integer espacioMemoria) {
+        this.espacioMemoria = espacioMemoria;
+    }
+
     private Integer contador = 0;
     private JPanel Computador;
     private JLabel valueD;

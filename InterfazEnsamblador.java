@@ -42,7 +42,8 @@ public class InterfazEnsamblador extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String codigo = AreaEnsamblador.getText();
-                ensamblador.Ensamblar(codigo);
+
+                new InterfazEnlazadorCargador(ensamblador.Ensamblar(codigo));
             }
         });
 

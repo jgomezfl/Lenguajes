@@ -13,7 +13,7 @@ public class Computador{
         // memoria.EscribirMemoria("0000000000", "0101010000000010");
         // memoria.EscribirMemoria("0000000001", "0000000100001010");
 
-        Ensamblador ensamblador = new Ensamblador();
+//        Ensamblador ensamblador = new Ensamblador();
 //        ensamblador.Ensamblar();
         // System.out.println(ensamblador.DecimalToBinario(45));
 
@@ -69,11 +69,13 @@ public class Computador{
 //        System.out.println(uc.registros.get("01"));
 //        System.out.println(uc.registros.get("10"));
 //        System.out.println(uc.registros.get("11"));
-        System.out.println(memoria.LeerMemoria("1100000000"));
+//        System.out.println(memoria.LeerMemoria("1100000000"));
         // memoria.VerMemoria();
 
         ///////////////////////////////////////// Interfaz /////////////////////////////////////////////
 
-        new InterfazUsuario(memoria, uc, ensamblador);
+//        new InterfazUsuario(memoria, uc, new Ensamblador());
+        new InterfazEnsamblador();
+//        new InterfazEnlazadorCargador();
     }
 }

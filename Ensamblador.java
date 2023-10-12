@@ -1,8 +1,8 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+//import java.io.BufferedReader;
+//import java.io.BufferedWriter;
+//import java.io.FileReader;
+//import java.io.FileWriter;
+//import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,7 +19,6 @@ public class Ensamblador {
     String PrimeraEtiqueta;
 
     Ensamblador(){
-
         TablaInstrucciones.put("Parar",         "0000000000000000");
         TablaInstrucciones.put("Cargar",        "0001");
         TablaInstrucciones.put("CargarValor",   "0010");
@@ -51,161 +50,146 @@ public class Ensamblador {
         Registros.put("D", "11");
     }
 
-    public void Ensamblar(String codigo){
+    public String Ensamblar(String codigo){
         String nameFile = "resultado_a_redireccionar.txt";
         List<String> lineas = new ArrayList<>();
 
-        try {
-            FileWriter fWriter = new FileWriter(nameFile);
-            BufferedWriter bfWriter = new BufferedWriter(fWriter);
-            String respuesta = "";
+        String [] cod = codigo.split("\n");
+        String linea;
+        int contLinea = 0;
+        String respuesta = "";
 
-            String [] cod = codigo.split("\n");
-            String linea;
-            int contLinea = 0;
-
-            for(String i : cod){
-                lineas.add(i);
-                linea = i.replaceAll("\\s+", " ");
-                List <String> l = new ArrayList<String>(Arrays.asList(linea.split(" ")));
-                l.removeIf(item -> item.equals(""));
-                if(contLinea == 0 && !l.get(0).contains(":")){
-                    PrimeraEtiqueta = "Programa";
-                    Etiquetas.put(PrimeraEtiqueta, contLinea+"");
-                    respuesta += PrimeraEtiqueta + "\n";
-                }
-                if(contLinea == 0 && l.get(0).contains(":")) {
-                    PrimeraEtiqueta = l.get(0).replaceAll(":", "");
-                    Etiquetas.put(l.get(0).replaceAll(":", ""), contLinea + "");
-                    respuesta += PrimeraEtiqueta + "\n";
-                    l.remove(0);
-                }
-                if(l.get(0).contains(":")){
-                    // Etiquetas.put(l.get(0).replaceAll(":", ""), contLinea+"");
-                    Etiquetas.put(l.get(0).replaceAll(":",""), PrimeraEtiqueta+"+"+contLinea);
-                    l.remove(0);
-                }
-                if(TablaInstrucciones.containsKey(l.get(0))){
-                    if(l.get(0).equals("CargarValor") || l.get(0).equals("AlmacenarNum") ||
-                    l.get(0).equals("SumarNum") || l.get(0).equals("RestarNum") ||
-                    l.get(0).equals("MultNum") || l.get(0).equals("DivtNum")){
-                        contLinea++;
-                    }
-                }
-                contLinea ++;
+        for(String i : cod){
+            lineas.add(i);
+            linea = i.replaceAll("\\s+", " ");
+            List <String> l = new ArrayList<String>(Arrays.asList(linea.split(" ")));
+            l.removeIf(item -> item.equals(""));
+            if(contLinea == 0 && !l.get(0).contains(":")){
+                PrimeraEtiqueta = "Programa";
+                Etiquetas.put(PrimeraEtiqueta, contLinea+"");
+                respuesta += PrimeraEtiqueta + "\n";
             }
-
-//            for(String i : Etiquetas.keySet()){
-//                System.out.println(i+" "+Etiquetas.get(i));
-//            }
-
-            for (String i : lineas){
-                linea = i.replaceAll("\\s+", " ");
-                List <String> l = new ArrayList<String>(Arrays.asList(linea.split(" ")));
-                l.removeIf(item -> item.equals(""));
-                if(l.get(0).contains(":")){
-                    l.remove(0);
-                }
-                if(TablaInstrucciones.containsKey(l.get(0))){
-                    if(l.get(0).equals("Parar")){
-                        respuesta += TablaInstrucciones.get(l.get(0));
-                    }
-                    if(l.get(0).equals("Cargar")){
-                        String [] args = l.get(1).split(",");
-                        respuesta += TablaInstrucciones.get(l.get(0))+Registros.get(args[0])+DecimalToBinarioDireccion(Integer.parseInt(args[1]))+"\n";
-                    }
-                    if(l.get(0).equals("CargarValor")){
-                        String [] args = l.get(1).split(",");
-                        respuesta += LLenarDeCeros(TablaInstrucciones.get(l.get(0))+Registros.get(args[0]))+"\n";
-                        respuesta += DecimalToBinario(Integer.parseInt(args[1]))+"\n";
-                        // contLinea++;
-                    }
-                    if(l.get(0).equals("Almacenar")){
-                        String [] args = l.get(1).split(",");
-                        respuesta += TablaInstrucciones.get(l.get(0))+Registros.get(args[0])+DecimalToBinarioDireccion(Integer.parseInt(args[1]))+"\n";
-                    }
-                    if(l.get(0).equals("SaltarSiCero")){
-                        respuesta += TablaInstrucciones.get(l.get(0))+" "+Etiquetas.get(l.get(1))+"\n";
-                        // System.out.println(l.get(1));
-                    }
-                    if(l.get(0).equals("SaltarSiNeg")){
-                        respuesta += TablaInstrucciones.get(l.get(0))+" "+Etiquetas.get(l.get(1))+"\n";
-                        // System.out.println(l.get(1));
-                    }
-                    if(l.get(0).equals("SaltarSiPos")){
-                        respuesta += TablaInstrucciones.get(l.get(0))+" "+Etiquetas.get(l.get(1))+"\n";
-                        // System.out.println(l.get(1));
-                    }
-                    if(l.get(0).equals("SaltarSiDes")){
-                        respuesta += TablaInstrucciones.get(l.get(0))+" "+Etiquetas.get(l.get(1))+"\n";
-                        // System.out.println(l.get(1));
-                    }
-                    if(l.get(0).equals("Saltar")){
-                        respuesta += TablaInstrucciones.get(l.get(0))+" "+Etiquetas.get(l.get(1))+"\n";
-                        // System.out.println(l.get(1));
-                    }
-                    if(l.get(0).equals("AlmacenarNum")){
-                        String [] args = l.get(1).split(",");
-                        respuesta += TablaInstrucciones.get(l.get(0))+DecimalToBinarioDireccion(Integer.parseInt(args[0]))+"\n";
-                        respuesta += DecimalToBinario(Integer.parseInt(args[1]))+"\n";
-                        // contLinea++;
-                    }
-                    if(l.get(0).equals("Copiar")){
-                        String [] args = l.get(1).split(",");
-                        respuesta += TablaInstrucciones.get(l.get(0))+Registros.get(args[0])+Registros.get(args[1])+"\n";
-                    }
-                    if(l.get(0).equals("Sumar")){
-                        String [] args = l.get(1).split(",");
-                        respuesta += TablaInstrucciones.get(l.get(0))+Registros.get(args[0])+Registros.get(args[1])+"\n";
-                    }
-                    if(l.get(0).equals("Restar")){
-                        String [] args = l.get(1).split(",");
-                        respuesta += TablaInstrucciones.get(l.get(0))+Registros.get(args[0])+Registros.get(args[1])+"\n";
-                    }
-                    if(l.get(0).equals("Mult")){
-                        String [] args = l.get(1).split(",");
-                        respuesta += TablaInstrucciones.get(l.get(0))+Registros.get(args[0])+Registros.get(args[1])+"\n";
-                    }
-                    if(l.get(0).equals("Div")){
-                        String [] args = l.get(1).split(",");
-                        respuesta += TablaInstrucciones.get(l.get(0))+Registros.get(args[0])+Registros.get(args[1])+"\n";
-                    }
-                    if(l.get(0).equals("SumarNum")){
-                        String [] args = l.get(1).split(",");
-                        respuesta += LLenarDeCeros(TablaInstrucciones.get(l.get(0))+Registros.get(args[0]))+"\n";
-                        respuesta += DecimalToBinario(Integer.parseInt(args[1]))+"\n";
-                        // contLinea++;
-                    }
-                    if(l.get(0).equals("RestarNum")){
-                        String [] args = l.get(1).split(",");
-                        respuesta += LLenarDeCeros(TablaInstrucciones.get(l.get(0))+Registros.get(args[0]))+"\n";
-                        respuesta += DecimalToBinario(Integer.parseInt(args[1]))+"\n";
-                        // contLinea++;
-                    }
-                    if(l.get(0).equals("MultNum")){
-                        String [] args = l.get(1).split(",");
-                        respuesta += LLenarDeCeros(TablaInstrucciones.get(l.get(0))+Registros.get(args[0]))+"\n";
-                        respuesta += DecimalToBinario(Integer.parseInt(args[1]))+"\n";
-                        // contLinea++;
-                    }
-                    if(l.get(0).equals("DivNum")){
-                        String [] args = l.get(1).split(",");
-                        respuesta += LLenarDeCeros(TablaInstrucciones.get(l.get(0))+Registros.get(args[0]))+"\n";
-                        respuesta += DecimalToBinario(Integer.parseInt(args[1]))+"\n";
-                        // contLinea++;
-                    }
-                }
-                // contLinea++;
+            if(contLinea == 0 && l.get(0).contains(":")) {
+                PrimeraEtiqueta = l.get(0).replaceAll(":", "");
+                Etiquetas.put(l.get(0).replaceAll(":", ""), contLinea + "");
+                respuesta += PrimeraEtiqueta + "\n";
+                l.remove(0);
             }
-            
-
-            bfWriter.write(respuesta);
-            bfWriter.close();
-            fWriter.close();
-            // bf.close();
-        } catch (IOException e) {
-            System.err.println("Error al leer el fichero: " + e.getMessage());
+            if(l.get(0).contains(":")){
+                // Etiquetas.put(l.get(0).replaceAll(":", ""), contLinea+"");
+                Etiquetas.put(l.get(0).replaceAll(":",""), PrimeraEtiqueta+"+"+contLinea);
+                l.remove(0);
+            }
+            if(TablaInstrucciones.containsKey(l.get(0))){
+                if(l.get(0).equals("CargarValor") || l.get(0).equals("AlmacenarNum") ||
+                        l.get(0).equals("SumarNum") || l.get(0).equals("RestarNum") ||
+                        l.get(0).equals("MultNum") || l.get(0).equals("DivtNum")){
+                    contLinea++;
+                }
+            }
+            contLinea ++;
         }
+
+        for (String i : lineas){
+            linea = i.replaceAll("\\s+", " ");
+            List <String> l = new ArrayList<String>(Arrays.asList(linea.split(" ")));
+            l.removeIf(item -> item.equals(""));
+            if(l.get(0).contains(":")){
+                l.remove(0);
+            }
+            if(TablaInstrucciones.containsKey(l.get(0))){
+                if(l.get(0).equals("Parar")){
+                    respuesta += TablaInstrucciones.get(l.get(0));
+                }
+                if(l.get(0).equals("Cargar")){
+                    String [] args = l.get(1).split(",");
+                    respuesta += TablaInstrucciones.get(l.get(0))+Registros.get(args[0])+DecimalToBinarioDireccion(Integer.parseInt(args[1]))+"\n";
+                }
+                if(l.get(0).equals("CargarValor")){
+                    String [] args = l.get(1).split(",");
+                    respuesta += LLenarDeCeros(TablaInstrucciones.get(l.get(0))+Registros.get(args[0]))+"\n";
+                    respuesta += DecimalToBinario(Integer.parseInt(args[1]))+"\n";
+                    // contLinea++;
+                }
+                if(l.get(0).equals("Almacenar")){
+                    String [] args = l.get(1).split(",");
+                    respuesta += TablaInstrucciones.get(l.get(0))+Registros.get(args[0])+DecimalToBinarioDireccion(Integer.parseInt(args[1]))+"\n";
+                }
+                if(l.get(0).equals("SaltarSiCero")){
+                    respuesta += TablaInstrucciones.get(l.get(0))+" "+Etiquetas.get(l.get(1))+"\n";
+                    // System.out.println(l.get(1));
+                }
+                if(l.get(0).equals("SaltarSiNeg")){
+                    respuesta += TablaInstrucciones.get(l.get(0))+" "+Etiquetas.get(l.get(1))+"\n";
+                    // System.out.println(l.get(1));
+                }
+                if(l.get(0).equals("SaltarSiPos")){
+                    respuesta += TablaInstrucciones.get(l.get(0))+" "+Etiquetas.get(l.get(1))+"\n";
+                    // System.out.println(l.get(1));
+                }
+                if(l.get(0).equals("SaltarSiDes")){
+                    respuesta += TablaInstrucciones.get(l.get(0))+" "+Etiquetas.get(l.get(1))+"\n";
+                    // System.out.println(l.get(1));
+                }
+                if(l.get(0).equals("Saltar")){
+                    respuesta += TablaInstrucciones.get(l.get(0))+" "+Etiquetas.get(l.get(1))+"\n";
+                    // System.out.println(l.get(1));
+                }
+                if(l.get(0).equals("AlmacenarNum")){
+                    String [] args = l.get(1).split(",");
+                    respuesta += TablaInstrucciones.get(l.get(0))+DecimalToBinarioDireccion(Integer.parseInt(args[0]))+"\n";
+                    respuesta += DecimalToBinario(Integer.parseInt(args[1]))+"\n";
+                    // contLinea++;
+                }
+                if(l.get(0).equals("Copiar")){
+                    String [] args = l.get(1).split(",");
+                    respuesta += TablaInstrucciones.get(l.get(0))+Registros.get(args[0])+Registros.get(args[1])+"\n";
+                }
+                if(l.get(0).equals("Sumar")){
+                    String [] args = l.get(1).split(",");
+                    respuesta += TablaInstrucciones.get(l.get(0))+Registros.get(args[0])+Registros.get(args[1])+"\n";
+                }
+                if(l.get(0).equals("Restar")){
+                    String [] args = l.get(1).split(",");
+                    respuesta += TablaInstrucciones.get(l.get(0))+Registros.get(args[0])+Registros.get(args[1])+"\n";
+                }
+                if(l.get(0).equals("Mult")){
+                    String [] args = l.get(1).split(",");
+                    respuesta += TablaInstrucciones.get(l.get(0))+Registros.get(args[0])+Registros.get(args[1])+"\n";
+                }
+                if(l.get(0).equals("Div")){
+                    String [] args = l.get(1).split(",");
+                    respuesta += TablaInstrucciones.get(l.get(0))+Registros.get(args[0])+Registros.get(args[1])+"\n";
+                }
+                if(l.get(0).equals("SumarNum")){
+                    String [] args = l.get(1).split(",");
+                    respuesta += LLenarDeCeros(TablaInstrucciones.get(l.get(0))+Registros.get(args[0]))+"\n";
+                    respuesta += DecimalToBinario(Integer.parseInt(args[1]))+"\n";
+                    // contLinea++;
+                }
+                if(l.get(0).equals("RestarNum")){
+                    String [] args = l.get(1).split(",");
+                    respuesta += LLenarDeCeros(TablaInstrucciones.get(l.get(0))+Registros.get(args[0]))+"\n";
+                    respuesta += DecimalToBinario(Integer.parseInt(args[1]))+"\n";
+                    // contLinea++;
+                }
+                if(l.get(0).equals("MultNum")){
+                    String [] args = l.get(1).split(",");
+                    respuesta += LLenarDeCeros(TablaInstrucciones.get(l.get(0))+Registros.get(args[0]))+"\n";
+                    respuesta += DecimalToBinario(Integer.parseInt(args[1]))+"\n";
+                    // contLinea++;
+                }
+                if(l.get(0).equals("DivNum")){
+                    String [] args = l.get(1).split(",");
+                    respuesta += LLenarDeCeros(TablaInstrucciones.get(l.get(0))+Registros.get(args[0]))+"\n";
+                    respuesta += DecimalToBinario(Integer.parseInt(args[1]))+"\n";
+                    // contLinea++;
+                }
+            }
+            // contLinea++;
+        }
+
+        return  respuesta;
     }
 
     public String DecimalToBinarioDireccion(int numero){
