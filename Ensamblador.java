@@ -68,15 +68,20 @@ public class Ensamblador {
                 linea = i.replaceAll("\\s+", " ");
                 List <String> l = new ArrayList<String>(Arrays.asList(linea.split(" ")));
                 l.removeIf(item -> item.equals(""));
+                if(contLinea == 0 && !l.get(0).contains(":")){
+                    PrimeraEtiqueta = "Programa";
+                    Etiquetas.put(PrimeraEtiqueta, contLinea+"");
+                    respuesta += PrimeraEtiqueta + "\n";
+                }
+                if(contLinea == 0 && l.get(0).contains(":")) {
+                    PrimeraEtiqueta = l.get(0).replaceAll(":", "");
+                    Etiquetas.put(l.get(0).replaceAll(":", ""), contLinea + "");
+                    respuesta += PrimeraEtiqueta + "\n";
+                    l.remove(0);
+                }
                 if(l.get(0).contains(":")){
                     // Etiquetas.put(l.get(0).replaceAll(":", ""), contLinea+"");
-                    if(Etiquetas.size() == 0){
-                        Etiquetas.put(l.get(0).replaceAll(":",""), contLinea+"");
-                        PrimeraEtiqueta = l.get(0).replaceAll(":","");
-                    }
-                    else{
-                        Etiquetas.put(l.get(0).replaceAll(":",""), PrimeraEtiqueta+"+"+contLinea);
-                    }
+                    Etiquetas.put(l.get(0).replaceAll(":",""), PrimeraEtiqueta+"+"+contLinea);
                     l.remove(0);
                 }
                 if(TablaInstrucciones.containsKey(l.get(0))){
