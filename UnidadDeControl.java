@@ -4,6 +4,11 @@ import java.util.Map;
 public class UnidadDeControl {
     private String IC; //Instrucción en Curso
     private String CP; //registro que apunta a una dirección en la memoria
+    private String DirInicial;
+
+    public void setDirInicial(String dirInicial) {
+        DirInicial = dirInicial;
+    }
 
     ////////////////////////////////////// Tabla de Instrucciones ////////////////////////////////////
     private final Map<String, String> TablaInstrucciones = new HashMap<>();
@@ -198,8 +203,8 @@ public class UnidadDeControl {
         }
     }
     
-    public void Procesar(String M){
-        CP = M;
+    public void Procesar(){
+        CP = DirInicial;
         if((CP.length() == 10) && (CP.matches("[01]+"))){
             IC = memoria.LeerMemoria(CP);
         }
@@ -216,7 +221,15 @@ public class UnidadDeControl {
             TablaInstrucciones();
             ExtraerMemoria();
             // System.out.println("");
+            DirInicial = CP;
         }
+    }
+
+    public void ProcesarPaso(){
+        CP = DirInicial;
+        ExtraerMemoria();
+        TablaInstrucciones();
+        DirInicial = CP;
     }
 
     void TablaInstrucciones(){
@@ -352,5 +365,13 @@ public class UnidadDeControl {
 
     public String getIndD(){
         return ua.getD();
+    }
+
+    public String getIC() {
+        return IC;
+    }
+
+    public String getCP() {
+        return CP;
     }
 }
