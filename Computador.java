@@ -63,17 +63,26 @@ public class Computador{
 
         //////////////////////////////////////////// Unidad de Control //////////////////////////////////
         UnidadDeControl uc = new UnidadDeControl(memoria);
-        
-        uc.Procesar("0000000000");
-//        System.out.println(uc.registros.get("00"));
-//        System.out.println(uc.registros.get("01"));
-//        System.out.println(uc.registros.get("10"));
-//        System.out.println(uc.registros.get("11"));
-        System.out.println(memoria.LeerMemoria("1100000000"));
+
+        uc.setDirInicial("0000000000");
+
+//        for (int i = 0; i < 3; i++ ) {
+//            uc.ProcesarPaso();
+//
+//            //uc.Procesar("0000000000");
+//            System.out.println(uc.registros.get("00"));
+//            System.out.println(uc.registros.get("01"));
+//            System.out.println(uc.registros.get("10"));
+//            System.out.println(uc.registros.get("11"));
+//            System.out.println(uc.getCP());
+//            System.out.println(uc.getIC());
+//            System.out.println("-------------------------------------------");
+//        }
+        //System.out.println(memoria.LeerMemoria("1100000000"));
         // memoria.VerMemoria();
 
         ///////////////////////////////////////// Interfaz /////////////////////////////////////////////
 
-        new InterfazUsuario(memoria, uc);
+        new InterfazUsuario(memoria, uc, ensamblador);
     }
 }

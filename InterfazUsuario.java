@@ -1,9 +1,14 @@
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class InterfazUsuario extends JFrame{
-    private Memoria memoria;
-    private UnidadDeControl uc;
+    private final Memoria memoria;
+    private final UnidadDeControl uc;
+    private final Ensamblador ensamblador;
+    private Integer espacioMemoria = 0;
+    private Integer contador = 0;
     private JPanel Computador;
     private JLabel valueD;
     private JLabel dValue;
@@ -25,11 +30,36 @@ public class InterfazUsuario extends JFrame{
     private JLabel p;
     private JTable Memoria;
 
-    public InterfazUsuario(Memoria memoria, UnidadDeControl uc){
+    public InterfazUsuario(Memoria memoria, UnidadDeControl uc, Ensamblador ensamblador){
         this.memoria = memoria;
         this.uc = uc;
+        this.ensamblador = ensamblador;
 
         mostrar();
+        ejecucionPasoAPasoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String espacio = ensamblador.DecimalToBinarioDireccion(espacioMemoria);
+                contador += 1;
+                if (contador == 1){
+                    uc.setDirInicial(espacio);
+                }
+                uc.ProcesarPaso();
+                mostrar();
+                espacioMemoria += 1;
+            }
+        });
+        ejecucionCompletaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                contador += 1;
+                if (contador == 1){
+                    uc.setDirInicial(ensamblador.DecimalToBinarioDireccion(espacioMemoria));
+                }
+                uc.Procesar();
+                mostrar();
+            }
+        });
     }
 
     public void mostrar(){
@@ -49,12 +79,17 @@ public class InterfazUsuario extends JFrame{
         valueC.setText(uc.registros.get("10"));
         valueD.setText(uc.registros.get("11"));
 
-//        cValue.setText(uc.getIndC());
-//        pValue.setText(uc.getIndP());
-//        nValue.setText(uc.getIndN());
-//        dValue.setText(uc.getIndD());
+        cValue.setText(uc.getIndC());
+        pValue.setText(uc.getIndP());
+        nValue.setText(uc.getIndN());
+        dValue.setText(uc.getIndD());
 
         setVisible(true);
+    }
+
+    public String binario (Integer espacioMemoria){
+        String memoriaBinario = "";
+        return memoriaBinario;
     }
 
     private static class MemoriaTableModel extends AbstractTableModel {

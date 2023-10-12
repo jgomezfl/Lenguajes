@@ -1,10 +1,14 @@
-For{(    While( 
-Int     }     Dias              Boolean       uwu
-If #oiwejdowáiedjowiedj 12312@3
-
-Dias
-#12+45
-
-For (Int i = 0 ; i < 12 ; i ++){
-    Print   (4.5)
-}
+mcd: AlmacenarNum 512,12
+AlmacenarNum 513,24
+Cargar A,512
+Cargar B,513
+bucle: Copiar A,C
+Restar C,B
+SaltarSiCero fin
+SaltarSiNeg menor
+Restar A,B
+Saltar bucle
+menor: Restar B,A
+Saltar bucle
+fin: Almacenar A,514
+Parar
