@@ -19,6 +19,7 @@ public class Ensamblador {
     String PrimeraEtiqueta;
 
     Ensamblador(){
+
         TablaInstrucciones.put("Parar",         "0000000000000000");
         TablaInstrucciones.put("Cargar",        "0001");
         TablaInstrucciones.put("CargarValor",   "0010");
