@@ -7,35 +7,56 @@ import java.util.List;
 public class EnlazadorCargador {
     Memoria memoria;
     String fichero = "resultado_a_redireccionar.txt";
+    String codigo;
 
-    EnlazadorCargador(Memoria memoria) {
-        this.memoria = memoria;
+    EnlazadorCargador(String codigo) {
+        memoria = new Memoria();
+        this.codigo = codigo;
+    }
+
+    public String Enlazar(){
+        String linea;
+        String [] l = codigo.split("\n");
+        String etiqueta = l[0];
+        String respuesta = "";
+
+        for(int i = 1 ; i < l.length ; i++){
+            linea = l[i];
+//            String pos = DecimalToBinarioDireccion(posicion);
+//            posicion += 1;
+//                System.out.println(pos+" -> "+linea);
+//            memoria.EscribirMemoria(pos, linea);
+            if (linea.contains(etiqueta)) {
+                String [] inst = linea.split(" ");
+
+                String instruccion = inst[0]+DecimalToBinarioDireccion(Integer.parseInt(inst[1].split("\\+")[1]));
+                respuesta += instruccion+"\n";
+//                memoria.EscribirMemoria(pos, instruccion);
+            }
+            else{
+                respuesta += linea+"\n";
+            }
+        }
+
+        return respuesta;
     }
 
     public void EnlazarCargar(int posicion) {
-//        List <String> lineas = new ArrayList<String>();
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(fichero));
-            String etiqueta = br.readLine();
-            String linea;
-            while ((linea = br.readLine()) != null) {
-                String pos = DecimalToBinarioDireccion(posicion);
-                posicion += 1;
+        String linea;
+        String [] l = codigo.split("\n");
+        String etiqueta = l[0];
+        for(int i = 1 ; i < l.length ; i++){
+            linea = l[i];
+            String pos = DecimalToBinarioDireccion(posicion);
+            posicion += 1;
 //                System.out.println(pos+" -> "+linea);
-                memoria.EscribirMemoria(pos, linea);
-                if (linea.contains(etiqueta)) {
-                    String [] inst = linea.split(" ");
+            memoria.EscribirMemoria(pos, linea);
+            if (linea.contains(etiqueta)) {
+                String [] inst = linea.split(" ");
 
-                    String instruccion = inst[0]+DecimalToBinarioDireccion(Integer.parseInt(inst[1].split("\\+")[1]));
-                    memoria.EscribirMemoria(pos, instruccion);
-                }
+                String instruccion = inst[0]+DecimalToBinarioDireccion(Integer.parseInt(inst[1].split("\\+")[1]));
+                memoria.EscribirMemoria(pos, instruccion);
             }
-            br.close();
-
-//            String
-        } catch (IOException e) {
-            System.err.println("Hubo un error al leer el archivo: " + e.getMessage());
         }
     }
 
