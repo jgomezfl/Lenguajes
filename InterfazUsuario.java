@@ -9,8 +9,33 @@ public class InterfazUsuario extends JFrame{
     private final Ensamblador ensamblador;
     private Integer espacioMemoria;
 
-    public void setEspacioMemoria(Integer espacioMemoria) {
-        this.espacioMemoria = espacioMemoria;
+    public void setEspacioMemoria(Integer es) {
+        this.espacioMemoria = es;
+
+        ejecucionPasoAPasoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String espacio = ensamblador.DecimalToBinarioDireccion(espacioMemoria);
+                contador += 1;
+                if (contador == 1){
+                    uc.setDirInicial(espacio);
+                }
+                uc.ProcesarPaso();
+                mostrar();
+                espacioMemoria += 1;
+            }
+        });
+        ejecucionCompletaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                contador += 1;
+                if (contador == 1){
+                    uc.setDirInicial(ensamblador.DecimalToBinarioDireccion(espacioMemoria));
+                }
+                uc.Procesar();
+                mostrar();
+            }
+        });
     }
 
     private Integer contador = 0;
@@ -41,30 +66,6 @@ public class InterfazUsuario extends JFrame{
         this.ensamblador = ensamblador;
 
         mostrar();
-        ejecucionPasoAPasoButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String espacio = ensamblador.DecimalToBinarioDireccion(espacioMemoria);
-                contador += 1;
-                if (contador == 1){
-                    uc.setDirInicial(espacio);
-                }
-                uc.ProcesarPaso();
-                mostrar();
-                espacioMemoria += 1;
-            }
-        });
-        ejecucionCompletaButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                contador += 1;
-                if (contador == 1){
-                    uc.setDirInicial(ensamblador.DecimalToBinarioDireccion(espacioMemoria));
-                }
-                uc.Procesar();
-                mostrar();
-            }
-        });
     }
 
     public void mostrar(){

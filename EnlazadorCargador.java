@@ -14,7 +14,7 @@ public class EnlazadorCargador {
         this.codigo = codigo;
     }
 
-    public String Enlazar(){
+    public String Enlazar(int num_linea){
         String linea;
         String [] l = codigo.split("\n");
         String etiqueta = l[0];
@@ -28,8 +28,9 @@ public class EnlazadorCargador {
 //            memoria.EscribirMemoria(pos, linea);
             if (linea.contains(etiqueta)) {
                 String [] inst = linea.split(" ");
+                int numSalto = Integer.parseInt(inst[1].split("\\+")[1])+num_linea;
 
-                String instruccion = inst[0]+DecimalToBinarioDireccion(Integer.parseInt(inst[1].split("\\+")[1]));
+                String instruccion = inst[0]+DecimalToBinarioDireccion(numSalto);
                 respuesta += instruccion+"\n";
 //                memoria.EscribirMemoria(pos, instruccion);
             }
@@ -45,6 +46,7 @@ public class EnlazadorCargador {
         String linea;
         String [] l = codigo.split("\n");
         String etiqueta = l[0];
+        int num_linea = posicion;
         for(int i = 1 ; i < l.length ; i++){
             linea = l[i];
             String pos = DecimalToBinarioDireccion(posicion);
@@ -53,11 +55,13 @@ public class EnlazadorCargador {
             memoria.EscribirMemoria(pos, linea);
             if (linea.contains(etiqueta)) {
                 String [] inst = linea.split(" ");
+                int numSalto = Integer.parseInt(inst[1].split("\\+")[1])+num_linea;
 
-                String instruccion = inst[0]+DecimalToBinarioDireccion(Integer.parseInt(inst[1].split("\\+")[1]));
+                String instruccion = inst[0]+DecimalToBinarioDireccion(numSalto);
                 memoria.EscribirMemoria(pos, instruccion);
             }
         }
+        // memoria.VerMemoria();
     }
 
     public String DecimalToBinarioDireccion(int numero){

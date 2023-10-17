@@ -46,35 +46,19 @@ public class InterfazEnlazadorCargador extends JFrame {
         BotonEnlazar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                textArea2.setText(enlazadorCargador.Enlazar());
+                VentanaDialogoCargar dialogoCargar = new VentanaDialogoCargar(InterfazEnlazadorCargador.this, codigo, 1);
+                dialogoCargar.setVisible(true);
+                textArea2.setText(dialogoCargar.getCodigoEnlazado());
             }
         });
 
         BotonCargar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                VentanaDialogoCargar dialogoCargar = new VentanaDialogoCargar(InterfazEnlazadorCargador.this, codigo);
-
+                VentanaDialogoCargar dialogoCargar = new VentanaDialogoCargar(InterfazEnlazadorCargador.this, codigo, 2);
                 dialogoCargar.setVisible(true);
-//                enlazadorCargador.EnlazarCargar();
             }
         });
-
-//        PanelGeneral.setBorder(new EmptyBorder(10,30,0,30));
-//
-//        PanelDelArea.setBorder(new LineBorder(Color.BLACK,5,true));
-//
-//        AreaEnsamblador.setBorder(new EmptyBorder(2,2,2,2));
-//
-//        PanelBoton.setBorder(new EmptyBorder(10,0,18,0));
-//
-//        BotonEnsamblar.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                String codigo = AreaEnsamblador.getText();
-//                ensamblador.Ensamblar(codigo);
-//            }
-//        });
 
         setVisible(true);
     }
