@@ -11,13 +11,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// Por cuestiones de facilidad tomamos la decisión de permitir en este lenguaje el siguiente conjunto de caracteres ascii
-// 32 (espacio) | 33, 35 (!, #) | 39 - 43 (', (, ), *, +) | 45 - 47 (-, ., /)
-// 48 - 57 (0-9) | 59, 60, 61, 62 (;, <, =, >)
-// 65 - 90 (A-Z) | 97 - 122 (a-z)
-// 123, 125 ({, })
-
-
 public class AnalisadorLexico {
     
     FileReader archivo;
