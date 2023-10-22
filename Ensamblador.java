@@ -51,7 +51,7 @@ public class Ensamblador {
     }
 
     public String Ensamblar(String codigo){
-        String nameFile = "resultado_a_redireccionar.txt";
+        String nameFile = "DocumentoAnalizador.txt";
         List<String> lineas = new ArrayList<>();
 
         String [] cod = codigo.split("\n");

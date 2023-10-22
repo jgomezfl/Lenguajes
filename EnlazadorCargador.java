@@ -1,12 +1,6 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 public class EnlazadorCargador {
     Memoria memoria;
-    String fichero = "resultado_a_redireccionar.txt";
+    String fichero = "DocumentoAnalizador.txt";
     String codigo;
 
     EnlazadorCargador(String codigo) {

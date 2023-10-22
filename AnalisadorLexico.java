@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 // import java.io.File;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,179 +22,191 @@ public class AnalisadorLexico {
     
     FileReader archivo;
     // String [] Tokens = {"Boolean", "Break", "If", "Else", "Int", "Float", "For", "While", "Char"};
-    Map<String, String> Tokens = new HashMap<>();
+    Map<Integer, Object> Diccionario = new HashMap<>();
     List<String> identificadores;
 
     String PatronIdentificador = "^[A-Za-z][a-zA-Z0-9_]*$";
     String PatronNumeroEntero = "^[0-9]+$";
     String PatronNumeroDecimal = "^[0-9]+.[0-9]+$";
 
-    AnalisadorLexico(FileReader archivo){
-        this.archivo = archivo;
-        
-        // Palabras Reservadas
-        Tokens.put("Boolean",   "TipoVariable");// Añadirmos los tipos de variables
-        Tokens.put("Int",       "TipoVariable");
-        Tokens.put("Float",     "TipoVariable");
-        Tokens.put("Char",      "TipoVariable");
-        Tokens.put("If",        "Estructura");// Añadimos las diferentes estructuras
-        Tokens.put("Else",      "Estructura");
-        Tokens.put("For",       "Estructura");
-        Tokens.put("While",     "Estructura");
-        Tokens.put("Print",     "Estructura");
-        Tokens.put("Or",        "OpLogico");// Operadores lógicos
-        Tokens.put("And",       "OpLogico");
-        Tokens.put("True",      "ValorLogico");// Valores Lógicos
-        Tokens.put("False",     "ValorLogico");
+    AnalisadorLexico(){
+        // La primer categoría léxica son las palabras reservadas
+        List<String> PalabrasReservadas =
+                List.of("Boolean","Integer","Float", "Char", // Tipos de Variable (1-4)
+                        "If", "Else", "For", "While", "Print", // Estructuras (5-9)
+                        "Or", "And", // Operadores Lógicos (10-11)
+                        "True", "False"); // Literalos Booleanos (12-13)
+        Diccionario.put(1, PalabrasReservadas);
 
-        // Operadores Aritmeticos
-        Tokens.put("+",         "OpAritmetico");
-        Tokens.put("-",         "OpAritmetico");
-        Tokens.put("*",         "OpAritmetico");
-        Tokens.put("/",         "OpAritmetico");
-        Tokens.put("//",        "OpAritmetico");
-        Tokens.put("++",        "OpAritmetico");
+        // La segunda categoría Léxica son los identificadores
+        Diccionario.put(2, "^[A-Za-z][a-zA-Z0-9_]*"); // Almacenamos el patrón a identificar
 
-        // Operadores Relacionales
-        Tokens.put("<", "OpRelacional");
-        Tokens.put(">", "OpRelacional");
-        Tokens.put(">=","OpRelacional");
-        Tokens.put("<=","OpRelacional");
-        Tokens.put("==","OpRelacional");
-        Tokens.put("!=","OpRelacional");
+        // La tercer categoría Léxica son los operadores
+        List<String> Operadores =
+                List.of("+","-","*","/","//","++", //Operadores Aritmeticos  (1-6)
+                        "<",">","<=",">=","==","!=", //Operador Relacional (7-12)
+                        "="); // Operador de Asignación (13)
+        Diccionario.put(3, Operadores);
 
-        // Operador de Asignación
-        Tokens.put("=", "OpAsignacion");
+        // La cuarta categoría Léxica son los literales
+        List<String> PatronesLiterales =
+                List.of("^[0-9]+.[0-9]+", // Números decimales (0)
+                        "^[0-9]+", // Números enteros (1)
+                        "^\"[a-zA-Z0-9]\""); // Caracter, solo admite caracteres alfa númericos (2)
+        Diccionario.put(4, PatronesLiterales);
+
+        // La quinta categoría son los delimitadores
+        List<String> Delimitadores =
+                List.of("(",")", // Paréntesis 1 y 2 respectivamente
+                        "{","}"); // Llaves 1 y 2 respectivamente
+        Diccionario.put(5, Delimitadores);
+
+        // La sexta categoría son los signos de puntuación
+        List<String> SignosDePuntuacion =
+                List.of("#", // Comentario de una línea, 1
+                        "/*", "*/", // Comentario de 2 líneas, 2 y 3 respectivamente
+                        ";"); // Mayormente usado en la sintaxis de ciertas estructuras, 4
+        Diccionario.put(6, SignosDePuntuacion);
+
+        // Definimos en el diccionario una categoría especial, el espacio en blanco
+        Diccionario.put(7, "^\\s+"); //\\s+
 
         //Inicializamos la lista de identificadores
         identificadores = new ArrayList<String>();
     }
 
     public String AnalizarArchivo(){
+        File archivo = new File("DocumentoAnalizador.txt");
+        String respuesta = "";
         try{
-            BufferedReader bf = new BufferedReader(archivo);
+            FileReader reader = new FileReader(archivo);
+            BufferedReader bfreader = new BufferedReader(reader);
+
             String linea;
-            int contLinea = 1;
-            while ((linea = bf.readLine()) != null){
-                // System.out.println("linea "+contLinea);
-                linea = linea.replaceAll("\\s+", " ");
-                List <String> l = new ArrayList<String>(Arrays.asList(linea.split("[ (){}]")));
-                l.removeIf(item -> item.equals(""));
-                while(!l.isEmpty()){
-                    // System.out.println(l.get(0));
-                    boolean isComment = false;
-                    for(int j = 0 ; j < l.get(0).length() ; j++){
-                        int VAscii = (int) l.get(0).charAt(j);
-                        if((VAscii==34) || (VAscii>35 && VAscii<39) || (VAscii==44) || (VAscii==58) ||
-                        (VAscii>62 && VAscii<65) || (VAscii>90 && VAscii<97) || (VAscii==124) || (VAscii>125)){
-                            String respuesta = "Caracter Invalido por el Lenguaje en la línea "+contLinea+"\n"+linea+"\n";
-                            for(int k = 0 ; k < linea.indexOf(l.get(0).charAt(j)) ; k++){
-                                respuesta += " ";
-                            }
-                            respuesta += "^";
-                            return respuesta;
+            int cont = 0;
+            while ((linea = bfreader.readLine()) != null){
+                cont += 1;
+                String lAux = linea;
+//                System.out.println(lAux);
+                while(lAux.length() > 0){
+                    String aux = (String) Diccionario.get(7);
+                    Pattern p = Pattern.compile(aux);
+                    Matcher m = p.matcher(lAux);
+
+                    if(m.find()){
+                        respuesta += "<"+7+",'"+m.group()+"'>\n";
+                        lAux = lAux.substring(m.group().length(),lAux.length());
+                    }
+
+                    boolean SalirDelBucle = false;
+                    for(int i = 1 ; i < 8 ; i++){
+                        switch (i){
+                            // Primero revisamos si es una palabra reservada
+                            case 1:
+                                List<String> PalabrasReservadas = (List<String>)Diccionario.get(i);
+                                for(String j : PalabrasReservadas){
+                                    if(lAux.length() < j.length()){
+                                        continue;
+                                    }
+                                    if(j.equals(lAux.substring(0,j.length()))){
+                                        respuesta += "<"+i+","+PalabrasReservadas.indexOf(j)+">\n";
+                                        lAux = lAux.substring(j.length(),lAux.length());
+                                        SalirDelBucle = true;
+                                        break;
+                                    }
+                                }
+                                break;
+                            case 2:
+                                Pattern patron = Pattern.compile((String)Diccionario.get(i));
+                                Matcher matcher = patron.matcher(lAux);
+
+                                if (matcher.find()) {
+                                    respuesta += "<"+i+",'"+matcher.group()+"'>\n";
+                                    lAux = lAux.substring(matcher.group().length(),lAux.length());
+                                    SalirDelBucle = true;
+                                }
+                                break;
+                            case 3:
+                                List<String> Operadores = (List<String>)Diccionario.get(i);
+                                for(String j : Operadores){
+                                    if(lAux.length() < j.length()){
+                                        continue;
+                                    }
+                                    if(j.equals(lAux.substring(0,j.length()))){
+                                        respuesta += "<"+i+","+Operadores.indexOf(j)+">\n";
+                                        lAux = lAux.substring(j.length(),lAux.length());
+                                        SalirDelBucle = true;
+                                        break;
+                                    }
+                                }
+                                break;
+                            case 4:
+                                List<String> PatronesLiterales = (List<String>)Diccionario.get(i);
+                                for(String j : PatronesLiterales){
+                                    Pattern patronLi = Pattern.compile(j);
+                                    Matcher matcherLi = patronLi.matcher(lAux);
+
+                                    if (matcherLi.find()) {
+                                        respuesta += "<"+i+",'"+matcherLi.group()+"'>\n";
+                                        lAux = lAux.substring(matcherLi.group().length(),lAux.length());
+                                        SalirDelBucle = true;
+                                        break;
+                                    }
+                                }
+                                break;
+                            case 5:
+                                List<String> Delimitadores = (List<String>)Diccionario.get(i);
+                                for(String j : Delimitadores){
+                                    if(lAux.length() < j.length()){
+                                        continue;
+                                    }
+                                    if(j.equals(lAux.substring(0,j.length()))){
+                                        respuesta += "<"+i+","+Delimitadores.indexOf(j)+">\n";
+                                        lAux = lAux.substring(j.length(),lAux.length());
+                                        SalirDelBucle = true;
+                                        break;
+                                    }
+                                }
+                                break;
+                            case 6:
+                                List<String> SignosDePuntuacion = (List<String>)Diccionario.get(i);
+                                for(String j : SignosDePuntuacion){
+                                    if(lAux.length() < j.length()){
+                                        continue;
+                                    }
+                                    if(j.equals(lAux.substring(0,j.length()))){
+                                        respuesta += "<"+i+","+SignosDePuntuacion.indexOf(j)+">\n";
+                                        lAux = lAux.substring(j.length(),lAux.length());
+                                        SalirDelBucle = true;
+                                        break;
+                                    }
+                                }
+                                break;
+                            case 7:
+                                respuesta = linea+"\n";
+                                for(int k = 0 ; k < linea.indexOf(lAux) ; k++){
+                                    respuesta += " ";
+                                }
+                                respuesta += "^\nCaracter Inválivo en la línea "+cont;
+                                return respuesta;
                         }
-                        // if(VAscii == 39){}
-                        if(VAscii == 35){
-                            isComment = true;
+                        if(SalirDelBucle){
                             break;
                         }
                     }
-                    if(isComment){
-                        break;
-                    }
-                    if(Tokens.containsKey(l.get(0))){
-                        // System.out.println(Tokens.get(l.get(0)));
-                        if(Tokens.get(l.get(0)).equals("TipoVariable")){
-                            if(l.size() > 1){
-                                if(Tokens.containsKey(l.get(1))){
-                                    String respuesta = "Palabra reservada, Identificador invalido en la linea "+contLinea+"\n"+linea+"\n";
-                                    for(int i = 0 ; i < linea.indexOf(l.get(1)) ; i++){
-                                        respuesta += " ";
-                                    }
-                                    respuesta += "^";
-                                    return respuesta;
-                                }
-                                Pattern patron = Pattern.compile(PatronIdentificador);
-                                Matcher matcher = patron.matcher(l.get(1));
-
-                                if(!matcher.matches()){
-                                    String respuesta = "Identificador invalido en la linea "+contLinea+"\n"+linea+"\n";
-                                    for(int i = 0 ; i < linea.indexOf(l.get(1)) ; i++){
-                                        respuesta += " ";
-                                    }
-                                    respuesta += "^";
-                                    return respuesta;
-                                }
-
-                                identificadores.add(l.get(1));
-
-                                l.remove(0);
-                                l.remove(0);
-                                continue;
-                            }
-                            else{
-                                String respuesta = "Identificador invalido en la linea "+contLinea+"\n"+linea+"\n";
-                                for(int i = 0 ; i < linea.length() ; i++){
-                                    respuesta += " ";
-                                }
-                                respuesta += " ^";
-                                return respuesta;
-                            }
-                        }
-                        l.remove(0);
-                        continue;
-                    }
-                    
-                    Pattern patron = Pattern.compile(PatronNumeroEntero);
-                    Matcher matcher = patron.matcher(l.get(0));
-                    if(matcher.matches()){
-                        l.remove(0);
-                        continue;
-                    }
-
-                    patron = Pattern.compile(PatronNumeroDecimal);
-                    matcher = patron.matcher(l.get(0));
-                    if(matcher.matches()){
-                        l.remove(0);
-                        continue;
-                    }
-
-                    int VAscii = (int) l.get(0).charAt(0);
-                    if((l.get(0).length() == 1)  && (VAscii == 32 || VAscii == 33 || VAscii == 35 || (VAscii > 38 && VAscii < 44) ||
-                    (VAscii > 44 && VAscii < 58) || (VAscii > 58 && VAscii < 63) || (VAscii > 64 && VAscii < 91) || 
-                    (VAscii > 96 && VAscii < 123) || VAscii == 123 || VAscii == 125)){
-                        l.remove(0);
-                        continue;
-                    }
-
-                    if(!identificadores.contains(l.get(0))){
-                        // for(String i : identificadores){
-                        //     if(i.length() < l.get(0).length()){
-                        //         String substring1 = l.get(0).substring(0, i.length());
-                        //         String substring2 = l.get(0).substring(i.length(), l.get(0).length());
-                        //         if(i.equals(substring1) && Tokens.containsKey(substring2)){
-                        //             l.remove(0);
-                        //             continue;
-                        //         }
-                        //     }
-                        // }
-                        String respuesta = linea+"\n";
-                        for(int i = 0 ; i < linea.indexOf(l.get(0)) ; i++){
-                            respuesta += " ";
-                        }
-                        respuesta += "^";
-                        return respuesta;
-                    }
-                    l.remove(0);
+//                    break;
                 }
-                contLinea++;
+//                break;
             }
+
+            bfreader.close();
+            reader.close();
+
+            return respuesta;
+
         }catch(IOException e){
-            System.err.println("Error al leer el fichero: " + e.getMessage());
+            return("Error al leer el fichero: " + e.getMessage());
         }
-        
-        return "";
     }
 
 
