@@ -2,6 +2,7 @@ Int UwU1;
 Float iwuh;
 String ieuwhd;
 
+6;
 5 + 4;
 5.3-2;
 2*2.1;
@@ -30,13 +31,12 @@ String ieuwhd = "wodij";
 
 False;
 
-UwU1 = "IU[UHw]";
+UwU1 = "IU[UHw";
 iwuh = 51.133;
 ieuwhd = 23;
-
 ieuwhd = UwU1;
 
-For(i = 0 ; i < 28 ; i +1){ 
+For(i = 0 ; i < 28 ; i +1){
     i = 3;
     UwU1 > iwuh;
 UwU1 < 12;

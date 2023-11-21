@@ -25,9 +25,8 @@ public class AnalisadorLexico {
     AnalisadorLexico(){
         // La primer categoría léxica son las palabras reservadas
         List<String> PalabrasReservadas =
-                List.of("Boolean","Integer","Float", "Char", // Tipos de Variable (1-4)
-                        "If", "Else", "For", "While", "Print", // Estructuras (5-9)
-                        "Or", "And", // Operadores Lógicos (10-11)
+                List.of("Int","Float","String", // Tipos de Variable (0-2)
+                        "For", "While", "If", "Write", "Read", // Estructuras (3-7)
                         "True", "False"); // Literalos Booleanos (12-13)
         Diccionario.put(1, PalabrasReservadas);
 
@@ -36,16 +35,17 @@ public class AnalisadorLexico {
 
         // La tercer categoría Léxica son los operadores
         List<String> Operadores =
-                List.of("+","-","*","/","//","++", //Operadores Aritmeticos  (1-6)
-                        "<",">","<=",">=","==","!=", //Operador Relacional (7-12)
-                        "="); // Operador de Asignación (13)
+                List.of("+","-","*","/","^", //Operadores Aritmeticos  (0-4)
+                        "<",">","<=",">=","==","!=", //Operador Relacional (5-11)
+                        "||","&&", "!", // Operadores Logicos (12 - 14)
+                        "="); // Operador de Asignación (15)
         Diccionario.put(3, Operadores);
 
         // La cuarta categoría Léxica son los literales
         List<String> PatronesLiterales =
-                List.of("^[0-9]+.[0-9]+", // Números decimales (0)
+                List.of("^[0-9]+\\.[0-9]+", // Números decimales (0)
                         "^[0-9]+", // Números enteros (1)
-                        "^\"[a-zA-Z0-9]\""); // Caracter, solo admite caracteres alfa númericos (2)
+                        "^\\\"[^\\\"]*\\\""); // Caracter, solo admite caracteres alfa númericos (2)
         Diccionario.put(4, PatronesLiterales);
 
         // La quinta categoría son los delimitadores
@@ -56,20 +56,18 @@ public class AnalisadorLexico {
 
         // La sexta categoría son los signos de puntuación
         List<String> SignosDePuntuacion =
-                List.of("#", // Comentario de una línea, 1
-                        "/*", "*/", // Comentario de 2 líneas, 2 y 3 respectivamente
-                        ";"); // Mayormente usado en la sintaxis de ciertas estructuras, 4
+                List.of(";"); // 0
         Diccionario.put(6, SignosDePuntuacion);
 
         // Definimos en el diccionario una categoría especial, el espacio en blanco
-        Diccionario.put(7, "^\\s+"); //\\s+
+        Diccionario.put(7, "^\\s+");
 
         //Inicializamos la lista de identificadores
         identificadores = new ArrayList<String>();
     }
 
     public String AnalizarArchivo(){
-        File archivo = new File("DocumentoAnalizador.txt");
+        File archivo = new File("Eje1.txt");
         String respuesta = "";
         try{
             FileReader reader = new FileReader(archivo);
@@ -87,7 +85,7 @@ public class AnalisadorLexico {
                     Matcher m = p.matcher(lAux);
 
                     if(m.find()){
-                        respuesta += "<"+7+",'"+m.group()+"'>\n";
+//                        respuesta += "<"+7+",'"+m.group()+"'>\n";
                         lAux = lAux.substring(m.group().length(),lAux.length());
                     }
 
@@ -176,6 +174,9 @@ public class AnalisadorLexico {
                                 }
                                 break;
                             case 7:
+                                if(lAux.equals("")){
+                                    break;
+                                }
                                 respuesta = linea+"\n";
                                 for(int k = 0 ; k < linea.indexOf(lAux) ; k++){
                                     respuesta += " ";
@@ -183,6 +184,8 @@ public class AnalisadorLexico {
                                 respuesta += "^\nCaracter Inválivo en la línea "+cont;
                                 return respuesta;
                         }
+//                        System.out.println(respuesta);
+//                        System.out.println("Linea Auxiliar: "+lAux);
                         if(SalirDelBucle){
                             break;
                         }

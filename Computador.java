@@ -82,8 +82,10 @@ public class Computador{
 //            System.out.println(matcher.group());
 //        }
 
-        AnalisadorLexico an = new AnalisadorLexico();
-
-        System.out.println(an.AnalizarArchivo());
+        Compilador comp = new Compilador("Eje1");
+        comp.compilar();
+//        AnalisadorLexico an = new AnalisadorLexico();
+//
+//        System.out.println(an.AnalizarArchivo());
     }
 }
