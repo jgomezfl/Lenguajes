@@ -19,12 +19,12 @@ public class Compilador {
 
         // Despues corre el sintactico
         try {
-            String comando = "type Eje1.txt | .\\Taller2.exe";
+            String comando = "type PrimerEjemplo.txt | .\\Taller2.exe";
             String resultado = ejecutarComando(comando);
             System.out.println(resultado);
             if(resultado.equals("")){
                 Conversor conv = new Conversor(lex.AnalizarArchivo());
-                conv.convertir();
+                System.out.println(conv.convertir());
             };
         } catch (IOException e) {
             e.printStackTrace();

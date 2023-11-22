@@ -1,0 +1,17 @@
+Int UwU1;
+
+Int UwU2 = 12 + 2;
+
+UwU2 = 15;
+
+UwU2 = 3-2;
+
+UwU1 = UwU2;
+
+Write UwU1;
+Read UwU1;
+
+If(){
+    UwU2 = 12 + 2;
+    UwU2 = 12 * 2;
+}

@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class UnidadDeControl {
     private String IC; //Instrucción en Curso
@@ -48,6 +49,8 @@ public class UnidadDeControl {
         TablaInstrucciones.put("SaltarSiDes",   "010011");
         TablaInstrucciones.put("Saltar",        "010100");
         TablaInstrucciones.put("AlmacenarNum",  "010101"); //Almacena un número en la dirección de memoria especificada
+        TablaInstrucciones.put("WriteNum",      "010110"); //Escribir Numero
+        TablaInstrucciones.put("ReadNum",       "010111"); //Leer Numero
 
         // Entre registros
         TablaInstrucciones.put("Copiar",        "011000000000");
@@ -139,6 +142,19 @@ public class UnidadDeControl {
         Sumar1Direccion();
         ExtraerMemoria();
         memoria.EscribirMemoria(M, IC);
+    }
+
+    void WriteNum(String M){
+        int num;
+
+        Scanner sc = new Scanner(System.in);
+        num = sc.nextInt();
+
+        memoria.EscribirMemoria(M, DecimalToBinario(num));
+    }
+
+    void ReadNum(String M){
+        System.out.println(binarioADecimal(memoria.LeerMemoria(M)));
     }
 
     void Copiar(String R, String R1){
@@ -287,6 +303,14 @@ public class UnidadDeControl {
                     AlmacenarNum(IC.substring(6, 16));
                     break;
                 }
+                if(i.getKey().equals("WriteNum")){
+                    WriteNum(IC.substring(6, 16));
+                    break;
+                }
+                if(i.getKey().equals("ReadNum")){
+                    ReadNum(IC.substring(6, 16));
+                    break;
+                }
                 if(i.getKey().equals("Copiar")){
                     // System.out.println("Copia del registro "+IC.substring(12, 14)+" al registro "+IC.substring(14, 16));
                     Copiar(IC.substring(12, 14), IC.substring(14, 16));
@@ -332,6 +356,16 @@ public class UnidadDeControl {
         Sumar1Direccion();
     }
 
+    public static int binarioADecimal(String binario) {
+        int resultado = 0;
+
+        for (int i = binario.length() - 1; i >= 0; i--) {
+            resultado += (binario.charAt(i) - '0') * Math.pow(2, binario.length() - 1 - i);
+        }
+
+        return resultado;
+    }
+
     void Sumar1Direccion(){
         String resp = "";
         String carry = "1";
@@ -351,6 +385,66 @@ public class UnidadDeControl {
         CP = resp;
     }
 
+    public static String DecimalToBinario(int numero){
+        if(numero > 32767 || numero < -32768){
+            return "Número fuera de rango";
+        }
+        if(numero == -32768){
+            return "1000000000000000";
+        }
+        String binario = "";
+        boolean negativo = false;
+        if(numero < 0){
+            negativo = true;
+            numero *= -1;
+        }
+        while(numero > 1){
+            int resto = numero % 2;
+            numero /= 2;
+            binario = resto+""+binario;
+        }
+        if(numero == 1){
+            binario = "1"+binario;
+        }
+
+        while(binario.length() < 15){
+            binario = "0"+binario;
+        }
+
+        if(negativo){
+            binario = "1" + binario;
+        }
+        else{
+            binario = "0" + binario;
+            return binario;
+        }
+
+        //Ahora hallamos complemento a 2 de ese número
+        String respuesta = "";
+        boolean aux = false;
+        for(int i = binario.length()-1 ; i > 0 ; i--){
+            if((!aux) && (binario.charAt(i) == '1')){
+                respuesta = binario.charAt(i)+respuesta;
+                aux = !aux;
+                continue;
+            }
+            if((!aux) && (binario.charAt(i) == '0')){
+                respuesta = binario.charAt(i)+respuesta;
+                continue;
+            }
+            if((aux) &&  (binario.charAt(i) == '1')){
+                respuesta = "0"+respuesta;
+                continue;
+            }
+            if((aux) &&  (binario.charAt(i) == '0')){
+                respuesta = "1"+respuesta;
+                continue;
+            }
+            System.out.println(i);
+        }
+        respuesta = binario.charAt(0)+respuesta;
+        return respuesta;
+    }
     public String getIndC(){
         return ua.getC();
     }

@@ -30,6 +30,8 @@ public class Ensamblador {
         TablaInstrucciones.put("SaltarSiDes",   "010011");
         TablaInstrucciones.put("Saltar",        "010100");
         TablaInstrucciones.put("AlmacenarNum",  "010101"); //Almacena un número en la dirección de memoria especificada
+        TablaInstrucciones.put("WriteNum",      "010110"); //Escribir Numero
+        TablaInstrucciones.put("ReadNum",       "010111"); //Leer Numero
 
         // Entre registros
         TablaInstrucciones.put("Copiar",        "011000000000");
@@ -139,6 +141,16 @@ public class Ensamblador {
                     String [] args = l.get(1).split(",");
                     respuesta += TablaInstrucciones.get(l.get(0))+DecimalToBinarioDireccion(Integer.parseInt(args[0]))+"\n";
                     respuesta += DecimalToBinario(Integer.parseInt(args[1]))+"\n";
+                    // contLinea++;
+                }
+                if(l.get(0).equals("WriteNum")){
+                    String arg = l.get(1);
+                    respuesta += TablaInstrucciones.get(l.get(0))+DecimalToBinarioDireccion(Integer.parseInt(arg))+"\n";
+                    // contLinea++;
+                }
+                if(l.get(0).equals("ReadNum")){
+                    String arg = l.get(1);
+                    respuesta += TablaInstrucciones.get(l.get(0))+DecimalToBinarioDireccion(Integer.parseInt(arg))+"\n";
                     // contLinea++;
                 }
                 if(l.get(0).equals("Copiar")){
@@ -268,6 +280,8 @@ public class Ensamblador {
         respuesta = binario.charAt(0)+respuesta;
         return respuesta;
     }
+
+
 
     public String LLenarDeCeros(String instruccion){
         while(instruccion.length() < 16){

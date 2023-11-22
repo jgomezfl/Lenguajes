@@ -72,7 +72,7 @@ public class Computador{
         ///////////////////////////////////////// Interfaz /////////////////////////////////////////////
 
 //        new InterfazUsuario(memoria, uc, new Ensamblador());
-//        new InterfazEnsamblador();
+        new InterfazEnsamblador();
 //        new InterfazEnlazadorCargador();
 
 //        Pattern patron = Pattern.compile("^\"[a-zA-Z0-9]\"");
@@ -82,10 +82,14 @@ public class Computador{
 //            System.out.println(matcher.group());
 //        }
 
-        Compilador comp = new Compilador("Eje1");
+        Compilador comp = new Compilador("PrimerEjemplo");
         comp.compilar();
+
+
+
 //        AnalisadorLexico an = new AnalisadorLexico();
 //
 //        System.out.println(an.AnalizarArchivo());
     }
+
 }

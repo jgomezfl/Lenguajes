@@ -67,7 +67,7 @@ public class AnalisadorLexico {
     }
 
     public String AnalizarArchivo(){
-        File archivo = new File("Eje1.txt");
+        File archivo = new File("PrimerEjemplo.txt");
         String respuesta = "";
         try{
             FileReader reader = new FileReader(archivo);
